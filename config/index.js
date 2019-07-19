@@ -1,13 +1,15 @@
 const config = {};
 
-config.appPort = 3000;
+config.appPort = 3004;
 
 config.mongodb = {
-    uri: 'mongodb+srv://backend:C2w7V%25!c9nPB*Z@message-h5swz.gcp.mongodb.net/messaging?retryWrites=true&w=majority'
+    uri: 'mongodb+srv://admin:pZlVuvhCVRY5oVoS@cluster0-vztbn.mongodb.net/cartracking?retryWrites=true&w=majority'
 };
 
 config.session = {
     secret: 'oifdnJ@ij(*HRT*#h8&*^765^&V%cv$#%^&V78b^RctUYT'
 };
+
+config.maxLocationCount = 10;
 
 module.exports = config;

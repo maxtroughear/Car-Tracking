@@ -13,8 +13,9 @@ const mongoose = require('mongoose');
 
 const config = require('./config');
 
-
 const indexRouter = require('./routes/index');
+const consoleRouter = require('./routes/console');
+const apiRouter = require('./routes/api');
 
 const app = express();
 
@@ -32,27 +33,17 @@ app.set('view engine', 'hbs');
 
 app.set('trust proxy', 1);
 
-app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
-	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-	if (req.method === 'OPTIONS') {
-		return res.sendStatus(200);
-	}
-	next();
-});
-
 app.use(logger('dev'));
 app.use(flash());
 app.use(session({
 	secret: config.session.secret,
 	saveUninitialized: false,
 	resave: false,
-	cookie: {secure: 'auto'}
+	cookie: { secure: 'auto' }
 }));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(sassMiddleware({
@@ -64,6 +55,8 @@ app.use(sassMiddleware({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/console/', consoleRouter);
+app.use('/api/', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -79,6 +72,12 @@ app.use(function (err, req, res, next) {
 	// render the error page
 	res.status(err.status || 500);
 	res.render('error');
+});
+
+mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
+	console.log('Connected to mongodb');
+}).catch(err => {
+	console.log(err);
 });
 
 module.exports = app;

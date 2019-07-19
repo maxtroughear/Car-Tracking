@@ -5,7 +5,6 @@ function isAuthenticated() {
         }
         res.redirect('/');
     };
-
 }
 
 module.exports = { isAuthenticated };
