@@ -34,7 +34,7 @@ router.use((req, res, next) => {
 		}
 		req.login(user, (err) => {
 			if (err) {
-				return res.json({ status: 'BAD KEY' });
+				return res.json({ status: 'LOGIN FAILED' });
 			}
 			next();
 		});
@@ -46,30 +46,34 @@ router.post('/submitlocation/:carID', isAuthenticated(), (req, res, next) => {
 	//console.log(req.user);
 	
 	Car.findById(req.params.carID).exec((err, car) => {
-		Car.populate(car, { path: 'user' }, (err, car) => {
-			if (!req.user._id.equals(car.user._id)) {
-				return res.json({ status: 'INVALID KEY FOR CAR' });
-			}
-			
-			if (car.locations.length >= config.maxLocationCount) {
-				car.locations.shift();
-			}
-			
-			// update car
-			car.locations.push(new Location({
-				lat: req.query.lat,
-				lon: req.query.lon,
-				time: new Date()
-			}));
-			//car.user = car.user._id;
-			
-			car.save().then((saved, err) => {
-				if (err) {
-					return res.json({ status: 'BAD UPDATE', err: err });
+		if (car == null) {
+			return res.json({ status: 'INVALID KEY FOR CAR' });
+		} else {
+			Car.populate(car, { path: 'user' }, (err, car) => {
+				if (!req.user._id.equals(car.user._id)) {
+					return res.json({ status: 'INVALID KEY FOR CAR' });
 				}
-				return res.json({ status: 'OK' });
-			});
-		})
+				
+				if (car.locations.length >= config.maxLocationCount) {
+					car.locations.shift();
+				}
+				
+				// update car
+				car.locations.push(new Location({
+					lat: req.query.lat,
+					lon: req.query.lon,
+					time: new Date()
+				}));
+				//car.user = car.user._id;
+				
+				car.save().then((saved, err) => {
+					if (err) {
+						return res.json({ status: 'BAD UPDATE', err: err });
+					}
+					return res.json({ status: 'OK' });
+				});
+			})
+		}
 	});
 });
 
