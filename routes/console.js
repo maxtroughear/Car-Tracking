@@ -30,7 +30,7 @@ const Car = require('../models/car').model;
 // });
 
 router.get('/login', (req, res, next) => {
-	res.render('login');
+	res.render('login', { title: 'Login' });
 });
 
 router.post('/login', (req, res, next) => {
@@ -134,7 +134,7 @@ router.get('/:carID?', (req, res, next) => {
 	} else {
 		Car.find({ user: req.user._id }, (err, cars) => {
 			if (err) {
-				res.render('console');
+				res.render('console', { title: 'Console' });
 			} else {
 				for (let i = 0; i < cars.length; i++) {
 					cars[i].stringID = cars[i].id;
@@ -145,12 +145,15 @@ router.get('/:carID?', (req, res, next) => {
 						if (car == null) {
 							res.redirect('/console');
 						} else {
-							car.stringID = car.id;
-							res.render('console', { carlist: JSON.parse(JSON.stringify(cars)), currentcar: JSON.parse(JSON.stringify(car)) });
+							res.render('console', {
+								title: car.name,
+								carlist: JSON.parse(JSON.stringify(cars)),
+								currentcar: JSON.parse(JSON.stringify(car))
+							});
 						}
 					});
 				} else {
-					res.render('console', { carlist: cars });
+					res.render('console', { title: 'Console', carlist: cars });
 				}
 			}
 		});

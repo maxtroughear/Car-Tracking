@@ -41,7 +41,7 @@ passport.use(new LocalAPIStrategy((key, done) => {
 		return done('Key is not valid');
 	}
 	const uuid = uuidAPIKey.toUUID(key);
-	console.log(uuid);
+	//console.log(uuid);
 	User.findOne({ 'uuid': uuid }).then((user, err) => {
 		if (err) {
 			return done(err);
