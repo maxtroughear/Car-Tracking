@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-//const LocalStrategy = require('passport-local').Strategy;
-//const LocalAPIStrategy = require('passport-localapikey').Strategy;
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const uuidAPIKey = require('uuid-apikey');
 
+const adminRouter = require('./console.admin');
+
 //const auth = require('./auth');
 
-//const isAuthenticated = require('./auth/middleware').isAuthenticated;
+const isAuthenticated = require('./auth/middleware').isAuthenticated;
 
 const User = require('../models/user').model;
 const Car = require('../models/car').model;
@@ -28,6 +28,8 @@ const Car = require('../models/car').model;
 // 		});
 // 	}
 // });
+
+router.use('/admin', isAuthenticated(), adminRouter);
 
 router.get('/login', (req, res, next) => {
 	res.render('login', { title: 'Login' });
@@ -134,7 +136,7 @@ router.get('/:carID?', (req, res, next) => {
 	} else {
 		Car.find({ user: req.user._id }, (err, cars) => {
 			if (err) {
-				res.render('console', { title: 'Console' });
+				res.render('console', { title: 'Console', adminAccess: req.user.admin });
 			} else {
 				for (let i = 0; i < cars.length; i++) {
 					cars[i].stringID = cars[i].id;
@@ -148,12 +150,16 @@ router.get('/:carID?', (req, res, next) => {
 							res.render('console', {
 								title: car.name,
 								carlist: JSON.parse(JSON.stringify(cars)),
-								currentcar: JSON.parse(JSON.stringify(car))
+								currentcar: JSON.parse(JSON.stringify(car)),
+								adminAccess: req.user.admin
 							});
 						}
 					});
 				} else {
-					res.render('console', { title: 'Console', carlist: cars });
+					res.render('console', {
+						title: 'Console', carlist: cars,
+						adminAccess: req.user.admin
+					});
 				}
 			}
 		});

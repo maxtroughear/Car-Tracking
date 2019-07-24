@@ -3,10 +3,13 @@ const refreshTimeoutms = 5000;
 const carUpdater = new function() {
     this.carID = null;
     this.active = false;
-    this.marker = L.marker([0, 0]);
+    this.marker = null;
     this.init = (carObject) => {
         this.carID = carObject;
         this.run();
+        if (typeof L != 'undefined') {
+            this.marker = L.marker([0, 0]);
+        }
     };
     this.run = () => {
         $.ajax({

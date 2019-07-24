@@ -39,8 +39,7 @@ app.use(session({
 	secret: config.session.secret,
 	saveUninitialized: false,
 	resave: false,
-	cookie: { secure: 'auto' },
-	expires: false
+	cookie: { secure: 'auto', expires: false }
 }));
 app.use(cookieParser());
 app.use(bodyParser.json());
