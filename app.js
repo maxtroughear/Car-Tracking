@@ -33,13 +33,14 @@ app.set('view engine', 'hbs');
 
 app.set('trust proxy', 1);
 
-app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(flash());
 app.use(session({
 	secret: config.session.secret,
 	saveUninitialized: false,
 	resave: false,
-	cookie: { secure: 'auto' }
+	cookie: { secure: 'auto' },
+	expires: false
 }));
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -77,7 +78,9 @@ app.use(function (err, req, res, next) {
 mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
 	console.log('Connected to mongodb');
 }).catch(err => {
-	console.log(err);
+	console.log('Unable to connect to mongodb');
+	console.error(err.name);
+	process.exit();
 });
 
 module.exports = app;

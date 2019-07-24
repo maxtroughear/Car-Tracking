@@ -1,35 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const LocalAPIStrategy = require('passport-localapikey').Strategy;
+//const LocalStrategy = require('passport-local').Strategy;
+//const LocalAPIStrategy = require('passport-localapikey').Strategy;
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 const uuidAPIKey = require('uuid-apikey');
 
-const auth = require('./auth');
+//const auth = require('./auth');
 
-const isAuthenticated = require('./auth/middleware').isAuthenticated;
+//const isAuthenticated = require('./auth/middleware').isAuthenticated;
 
 const User = require('../models/user').model;
+const Car = require('../models/car').model;
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-	if (!req.isAuthenticated()) {
-		res.redirect('console/login');
-	} else {
-		res.render('console', { carlist: ['test car', 'test 2', 'test 3'] });
-	}
-});
+// router.get('/', (req, res, next) => {
+// 	if (!req.isAuthenticated()) {
+// 		res.redirect('console/login');
+// 	} else {
+// 		Car.find({ user: req.user._id }, (err, cars) => {
+// 			if (err) {
+// 				res.render('console');
+// 			} else {
+// 				res.render('console', { carlist: cars });
+// 			}
+// 		});
+// 	}
+// });
 
-router.get('/login', function(req, res, next) {
+router.get('/login', (req, res, next) => {
 	res.render('login');
 });
 
-router.post('/login', function(req, res, next) {
+router.post('/login', (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
 		if (err) {
 			req.flash('error', 'Unexpected error occurred');
-			res.redirect('/');
+			return res.redirect('/');
 		}
 		if (!user && req.body.username != null) {
 			req.flash('error', 'Invalid username or password');
@@ -40,7 +48,7 @@ router.post('/login', function(req, res, next) {
 		} else {
 			req.login(user, (err) => {
 				if (err) {
-					res.redirect('/console/login?username=' + encodeURIComponent(req.body.username));
+					return res.redirect('/console/login?username=' + encodeURIComponent(req.body.username));
 				}
 				return res.redirect('/console');
 			});
@@ -48,7 +56,7 @@ router.post('/login', function(req, res, next) {
 	})(req, res, next);
 });
 
-router.post('/createaccount', function(req, res, next) {
+router.post('/createaccount', (req, res, next) => {
 	if (req.body.username == null || req.body.password == null || req.body.confirmpassword == null) {
 		req.flash('error', 'Unable to create account');
 		//res.redirect('/?register=true');
@@ -89,6 +97,60 @@ router.post('/createaccount', function(req, res, next) {
 							})
 						})
 					});
+				}
+			}
+		});
+	}
+});
+
+router.get('/getlocation', (req, res, next) => {
+	if (!req.isAuthenticated()) {
+		res.json({ status: 'NO AUTH' });
+	} else {
+		if (req.query.carID == null) {
+			return res.json({ status: 'BAD ID' });
+		}
+		if (mongoose.Types.ObjectId.isValid(req.query.carID)) {
+			Car.findById(req.query.carID).then((doc) => {
+				if (doc) {
+					if (doc.user.equals(req.user._id)) {
+						return res.json({ status: 'OK', locations: doc.locations });
+					} else {
+						return res.json({ status: 'INVALID AUTH' });
+					}
+				} else {
+					return res.json({ status: 'NO DATA' });
+				}
+			});
+		} else {
+			return res.json({ status: 'INVALID ID' });
+		}
+	}
+});
+
+router.get('/:carID?', (req, res, next) => {
+	if (!req.isAuthenticated()) {
+		res.redirect('/console/login');
+	} else {
+		Car.find({ user: req.user._id }, (err, cars) => {
+			if (err) {
+				res.render('console');
+			} else {
+				for (let i = 0; i < cars.length; i++) {
+					cars[i].stringID = cars[i].id;
+				}
+				
+				if (req.params.carID != null) {
+					Car.findById(req.params.carID).exec((err, car) => {
+						if (car == null) {
+							res.redirect('/console');
+						} else {
+							car.stringID = car.id;
+							res.render('console', { carlist: JSON.parse(JSON.stringify(cars)), currentcar: JSON.parse(JSON.stringify(car)) });
+						}
+					});
+				} else {
+					res.render('console', { carlist: cars });
 				}
 			}
 		});
