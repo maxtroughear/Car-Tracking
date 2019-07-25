@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/fonts/simple-line-icons.min.css">
     <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assets/css/Default.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="/assets/css/Login-Form-Clean.css">
     <link rel="stylesheet" href="/assets/css/Map.css">
@@ -35,13 +36,13 @@
     <div>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-3"><ul class="list-group">
+                <div class="col-md-3"><ul class="list-group nav">
     {{#each carlist}}
-    <a href="/console/{{this._id}}">
-        <li class="list-group-item">
-            {{this.name}}            
-        </li>
-    </a>
+    <li>
+        <a class="list-group-item" href="/console/{{this._id}}">
+            {{this.name}}
+        </a>
+    </li>
     {{/each}}
 </ul></div>
                 <div class="col-md-9"><div>{{currentcar.name}}</div><div id="map"></div></div>

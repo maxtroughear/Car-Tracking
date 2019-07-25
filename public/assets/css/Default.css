@@ -1,0 +1,11 @@
+li a:hover {
+  text-decoration: none;
+}
+
+.list-group.nav.nav-pills {
+}
+
+.btn-group {
+  margin-right: 10px;
+}
+
