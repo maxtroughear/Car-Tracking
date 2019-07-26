@@ -1,7 +1,12 @@
 
-    <nav class="navbar navbar-light navbar-expand bg-light navigation-clean">
-        <div class="container"><a class="navbar-brand" href="#">Simple Car Tracking</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
-            <div class="collapse navbar-collapse" id="navcol-1"><a class="btn btn-primary ml-auto" role="button" href="/console">Console</a></div>
+    <nav class="navbar navbar-light navbar-expand sticky-top bg-light navigation-clean-search" href="#">
+        <div class="container"><a class="navbar-brand" href="/">Simple Car Tracking</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <form class="form-inline mr-auto" target="_self">
+                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div>
+                </form>{{#if adminAccess}}
+<a class="btn btn-primary ml-auto" role="button" href="/console/admin" style="margin-right: 25px;">Admin</a>
+{{/if}}<a class="btn btn-primary" role="button" href="/console">Console</a></div>
         </div>
     </nav>
     <header class="masthead text-white text-center" style="background:url('/assets/img/bg-masthead.jpg')no-repeat center center;background-size:cover;">
@@ -49,17 +54,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">{{content}}</div>
-            </div>
-        </div>
-    </section>
-    <section class="showcase">
-        <div class="container-fluid p-0">
-            <div class="row no-gutters">
-                <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image:url(&quot;/assets/img/bg-showcase-1.jpg&quot;);"><span></span></div>
-                <div class="col-lg-6 my-auto order-lg-1 showcase-text">
-                    <h2>Fully Responsive Design</h2>
-                    <p class="lead mb-0">When you use a theme created with Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!</p>
-                </div>
             </div>
         </div>
     </section>

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const passport = require('passport')
+const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const LocalAPIStrategy = require('passport-localapikey').Strategy;
+const uuidAPIKey = require('uuid-apikey');
 
 //const authenticationMiddleware = require('./middleware');
 
@@ -36,14 +37,19 @@ passport.use(new LocalStrategy({
 ));
 
 passport.use(new LocalAPIStrategy((key, done) => {
-	User.findOne({ apiKey: key }).then((user, err) => {
+	if (!uuidAPIKey.isAPIKey(key)) {
+		return done('Key is not valid');
+	}
+	const uuid = uuidAPIKey.toUUID(key);
+	//console.log(uuid);
+	User.findOne({ 'uuid': uuid }).then((user, err) => {
 		if (err) {
 			return done(err);
 		} else {
 			if (user == null) {
 				return done(null, false);
 			}
-			if (user.apiKey !== key) {
+			if (user.uuid !== uuid) {
 				return done(null, false);
 			}
 			return done(null, user);

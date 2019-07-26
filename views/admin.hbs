@@ -1,0 +1,86 @@
+
+    <nav class="navbar navbar-light navbar-expand sticky-top bg-light navigation-clean-search" href="#">
+        <div class="container"><a class="navbar-brand" href="/">Simple Car Tracking</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <form class="form-inline mr-auto" target="_self">
+                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div>
+                </form>{{#if adminAccess}}
+<a class="btn btn-primary ml-auto" role="button" href="/console/admin" style="margin-right: 25px;">Admin</a>
+{{/if}}<a class="btn btn-primary" role="button" href="/console">Console</a></div>
+        </div>
+    </nav>
+    <div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3"><ul class="list-group nav nav-pills">
+    <li>
+        <a data-toggle="pill" href="#dashboard" class="list-group-item active">
+            Dashboard
+        </a>
+    </li>
+    <li>
+        <a data-toggle="pill" href="#users" class="list-group-item">
+            Users
+        </a>
+    </li>
+</ul></div>
+                <div class="col">
+                    <div class="tab-content">
+                        <div id="dashboard" class="tab-pane fade active show">
+                            <h1>Dashboard</h1>
+                        </div>
+                        <div id="users" class="tab-pane fade active show">
+                            <h1>Users</h1>
+                            <div class="row" style="padding-bottom: 10px;">
+                                <div class="col"><button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createUserModal">Create User</button></div>
+                            </div>
+                            <div class="row">
+                                <div class="col"><ul class="list-group nav">
+    {{#each users}}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-sm-10" style="align-items: center; display: flex;">
+                <h6 class="" style="margin: 0">
+                    {{this.username}}
+                </h6>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-warning float-right">
+                    Edit
+                </button>
+            </div>
+        </div>
+    </li>
+    {{/each}}
+</ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="createUserModal">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create User</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body">
+                    <form method="post" action="/console/admin/createaccount">
+                        <div class="form-group"><label>Email Address</label><input class="form-control" type="email" id="username" name="username"></div>
+                        <div class="form-group"><label>Name</label><input class="form-control" type="text" id="password" name="name"></div>
+                        <div class="form-group"><label>Password</label><input class="form-control" type="password" id="password" name="password"></div>
+                        <div class="form-group"><label>Confirm Password</label><input class="form-control" type="password" id="confirmpassword" name="confirmpassword"></div>
+                        <div class="form-group"><label>Authorisation Level</label><select class="form-control" id="authlevel" name="authlevel"><option value="0" selected="">User</option><option value="1">Admin</option></select></div>
+                        <div class="btn-toolbar float-right">
+                            <div class="btn-group" role="group"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
+                            <div class="btn-group" role="group"><button class="btn btn-primary" type="submit">Create</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/script.min.js"></script>

@@ -30,6 +30,10 @@
     "passport-local": "^1.0.0",
     "passport-localapikey": "0.0.3",
     "path": "^0.12.7",
-    "server-static": "^2.0.5"
+    "server-static": "^2.0.5",
+    "uuid-apikey": "^1.4.3"
+  },
+  "nodemonConfig": {
+    "ignore": [ "public/", "views/" ]
   }
 }
