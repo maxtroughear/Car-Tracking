@@ -29,7 +29,7 @@ const Car = require('../models/car').model;
 // 	}
 // });
 
-router.use('/admin', isAuthenticated(), adminRouter);
+router.use('/admin', adminRouter);
 
 router.get('/login', (req, res, next) => {
 	res.render('login', { title: 'Login' });
@@ -56,53 +56,6 @@ router.post('/login', (req, res, next) => {
 			});
 		}
 	})(req, res, next);
-});
-
-router.post('/createaccount', (req, res, next) => {
-	if (req.body.username == null || req.body.password == null || req.body.confirmpassword == null) {
-		req.flash('error', 'Unable to create account');
-		//res.redirect('/?register=true');
-		res.json({ status: 'FAILED', message: 'Missing info' });
-	} else if (req.body.password !== req.body.confirmpassword) {
-		req.flash('error', 'Unable to create account. Passwords don\'t match');
-		//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
-		res.json({ status: 'FAILED', message: 'Passwords don\'t match' });
-	} else {
-		User.findOne({ username: req.body.username }).then((user, err) => {
-			if (err) {
-				req.flash('error', 'Unable to create account');
-				//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
-				res.json({ status: 'FAILED', message: 'Unable to create account' });
-			} else {
-				if (user != null) {
-					req.flash('error', 'Unable to create account');
-					//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
-					res.json({ status: 'FAILED', message: 'Unable to create account' });
-				} else {
-					bcrypt.hash(req.body.password, 10, (err, hash) => {
-						// generate apikey
-						
-						const uuidAPI = uuidAPIKey.create();
-						
-						const newUser = new User({
-							username: req.body.username,
-							hash: hash,
-							uuid: uuidAPI.uuid
-						});
-						
-						newUser.save().then((savedUser) => {
-							req.login(savedUser, (err) => {
-								if (err) {
-									return next(err);
-								}
-								return res.json({ status: 'OK', key: uuidAPI.apiKey });
-							})
-						})
-					});
-				}
-			}
-		});
-	}
 });
 
 router.get('/getlocation', (req, res, next) => {
