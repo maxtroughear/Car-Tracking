@@ -47,7 +47,7 @@ router.get('/', adminAuth(), (req, res, next) => {
 	});
 });
 
-router.post('/createaccount', adminAPIAuth(), (req, res, next) => {
+router.post('/createaccount', adminAuth(), (req, res, next) => {
 	if (req.body.username == null || req.body.name == null || req.body.password == null || req.body.confirmpassword == null) {
 		req.flash('error', 'Unable to create account');
 		//res.redirect('/?register=true');
