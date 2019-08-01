@@ -81,7 +81,18 @@ mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
 }).catch(err => {
 	console.log('Unable to connect to mongodb');
 	console.error(err.name);
-	process.exit();
+	
+	console.log('Trying second server');
+	mongoose.connect(config.mongodb.uri2, { useNewUrlParser: true }).then(() => {
+		console.log('Connected to secondary mongodb');
+	}).catch(err => {
+		console.log('Unable to connect to mongodb');
+		console.error(err.name);
+		
+		console.log('Terminating');
+		
+		process.exit();
+	});
 });
 
 module.exports = app;
