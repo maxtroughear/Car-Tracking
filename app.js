@@ -19,8 +19,6 @@ const apiRouter = require('./routes/api');
 
 const app = express();
 
-const uuidAPIKey = require('uuid-apikey');
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -82,17 +80,7 @@ mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
 	console.log('Unable to connect to mongodb');
 	console.error(err.name);
 	
-	console.log('Trying second server');
-	mongoose.connect(config.mongodb.uri2, { useNewUrlParser: true }).then(() => {
-		console.log('Connected to secondary mongodb');
-	}).catch(err => {
-		console.log('Unable to connect to mongodb');
-		console.error(err.name);
-		
-		console.log('Terminating');
-		
-		process.exit();
-	});
+	process.exit(1);
 });
 
 module.exports = app;
