@@ -76,6 +76,12 @@ app.use(function (err, req, res, next) {
 
 mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
 	console.log('Connected to mongodb');
+	
+	// check if main admin exists
+	// create admin if account does not exist
+	
+	
+	
 }).catch(err => {
 	console.log('Unable to connect to mongodb');
 	console.error(err.name);
