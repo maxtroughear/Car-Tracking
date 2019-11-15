@@ -43,7 +43,11 @@ router.get('/login', (req, res, next) => {
 });
 
 router.get('/firstaccount', (req, res, next) => {
-	res.json({ status: 'ok' });
+	if (config.adminExists)
+		res.redirect('/console/login');
+	else {
+		res.render('register', { title: 'First Account' });
+	}
 });
 
 router.post('/firstaccount', (req, res, next) => {
