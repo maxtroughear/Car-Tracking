@@ -1,11 +1,18 @@
-version: "2"
+version: '3'
 services:
-  web:
-    build: .
-    ports:
-    - "3004:3000"
+  cartracking:
+    image: __CI_APPLICATION_REPOSITORY__:__VERSION__
+    environment:
+      - VIRTUAL_HOST=__VIRTUAL_HOST__
+      - VIRTUAL_PORT=__VIRTUAL_PORT__
+      - LETSENCRYPT_HOST=__VIRTUAL_HOST_SSL__
+      - MAXLOCATION=__MAXLOCATION__
+      - SECRET=__SECRET__
 
   mongo:
     image: mongo
     volumes:
-    - /srv/cartracking/data/db:/data/db
+    - cartracking-data:/data/db
+
+volumes:
+  cartracking-data:

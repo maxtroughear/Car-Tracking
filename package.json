@@ -33,7 +33,8 @@
     "passport-localapikey": "0.0.3",
     "path": "^0.12.7",
     "server-static": "^2.0.5",
-    "uuid-apikey": "^1.4.4"
+    "uuid-apikey": "^1.4.4",
+    "ws": "^7.1.2"
   },
   "nodemonConfig": {
     "ignore": [

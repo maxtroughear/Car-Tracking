@@ -1,17 +1,17 @@
-FROM node:10.16-alpine
+FROM node:10.17-alpine
 
-ENV SECRET SOMESECRET
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+
 ENV PORT 3000
-ENV MAXLOCATION 10
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-
+COPY package.json /usr/src/app/
 RUN npm install
 
-COPY . .
+COPY . /usr/src/app
 
-EXPOSE 3000
+EXPOSE $PORT
 
 CMD [ "npm", "start" ]
