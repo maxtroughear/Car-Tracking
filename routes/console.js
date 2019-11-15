@@ -46,6 +46,55 @@ router.get('/firstaccount', (req, res, next) => {
 	res.json({ status: 'ok' });
 });
 
+router.post('/firstaccount', (req, res, next) => {
+	if (config.adminExists) {
+		res.json({ status: 'INVALID REQUEST' });
+	} else {
+		if (req.body.username == null || req.body.name == null || req.body.password == null || req.body.confirmpassword == null) {
+			req.flash('error', 'Unable to create account');
+			//res.redirect('/?register=true');
+			res.json({ status: 'FAILED', message: 'Missing info' });
+		} else if (req.body.password !== req.body.confirmpassword) {
+			req.flash('error', 'Unable to create account. Passwords don\'t match');
+			//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
+			res.json({ status: 'FAILED', message: 'Passwords don\'t match' });
+		} else {
+			User.findOne({ username: req.body.username }).then((user, err) => {
+				if (err) {
+					req.flash('error', 'Unable to create account');
+					//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
+					res.json({ status: 'FAILED', message: 'Unable to create account' });
+				} else {
+					if (user != null) {
+						req.flash('error', 'Unable to create account');
+						//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
+						res.json({ status: 'FAILED', message: 'Unable to create account' });
+					} else {
+						bcrypt.hash(req.body.password, 10, (err, hash) => {
+							// generate apikey
+							
+							const uuidAPI = uuidAPIKey.create();
+							
+							const newUser = new User({
+								username: req.body.username,
+								name: req.body.name,
+								hash: hash,
+								uuid: uuidAPI.uuid,
+								apikey: uuidAPI.apiKey,
+								admin: true
+							});
+							
+							newUser.save().then(() => {
+								return res.redirect('/console');
+							})
+						});
+					}
+				}
+			});
+		}
+	}
+});
+
 router.post('/login', (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
 		if (err) {
