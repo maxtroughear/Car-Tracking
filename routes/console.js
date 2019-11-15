@@ -38,7 +38,7 @@ router.get('/login', (req, res, next) => {
 	if (config.adminExists)
 		res.render('login', { title: 'Login' });
 	else {
-		res.redirect('/firstaccount');
+		res.redirect('/console/firstaccount');
 	}
 });
 
