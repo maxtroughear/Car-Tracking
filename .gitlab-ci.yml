@@ -1,4 +1,4 @@
-image: node:10.17-alpine
+image: node:10.17
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -37,7 +37,7 @@ setup:
 
 .test: &test_template
   services:
-    - redis:alpine
+    - mongo
   stage: test
   except:
     variables:
