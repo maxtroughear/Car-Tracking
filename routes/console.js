@@ -67,12 +67,12 @@ router.post('/firstaccount', (req, res, next) => {
 				if (err) {
 					req.flash('error', 'Unable to create account');
 					//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
-					res.json({ status: 'FAILED', message: 'Unable to create account' });
+					res.json({ status: 'FAILED', message: 'Unable to create account error' });
 				} else {
 					if (user != null) {
 						req.flash('error', 'Unable to create account');
 						//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
-						res.json({ status: 'FAILED', message: 'Unable to create account' });
+						res.json({ status: 'FAILED', message: 'Unable to create account user exists' });
 					} else {
 						bcrypt.hash(req.body.password, 10, (err, hash) => {
 							// generate apikey

@@ -50,11 +50,6 @@ test:
     - npm install --only=dev
     - npm test
 
-test_echo:
-  <<: *test_template
-  script:
-    - echo "$CI_DEFAULT_BRANCH"
-
 build:
   stage: build
   image:
