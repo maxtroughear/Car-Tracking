@@ -32,7 +32,15 @@ const Car = require('../models/car').model;
 router.use('/admin', adminRouter);
 
 router.get('/login', (req, res, next) => {
-	res.render('login', { title: 'Login' });
+	if (config.adminExists)
+		res.render('login', { title: 'Login' });
+	else {
+		res.redirect('/firstaccount');
+	}
+});
+
+router.get('/firstaccount', (req, res, next) => {
+	res.json({ status: 'ok' });
 });
 
 router.post('/login', (req, res, next) => {

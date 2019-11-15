@@ -1,7 +1,6 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const session = require('express-session');
 const hbs = require('express-handlebars');
@@ -16,6 +15,9 @@ const config = require('./config');
 const indexRouter = require('./routes/index');
 const consoleRouter = require('./routes/console');
 const apiRouter = require('./routes/api');
+
+const User = require('../models/user').model;
+
 
 const app = express();
 
@@ -78,9 +80,18 @@ mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
 	console.log('Connected to mongodb');
 	
 	// check if main admin exists
+	User.findOne({ admin: true }).then((user, err) => {
+		if (err) {
+			config.adminExists = false;
+		} else {
+			if (user == null) {
+				config.adminExists = false;
+			}
+		}
+		console.log('Admin exists: ' + config.adminExists);
+	});
+	
 	// create admin if account does not exist
-	
-	
 	
 }).catch(err => {
 	console.log('Unable to connect to mongodb');
