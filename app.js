@@ -81,6 +81,9 @@ mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
 	
 	// check if main admin exists
 	User.findOne({ admin: true }).then((user, err) => {
+		console.log(user);
+		console.log(err);
+		
 		if (err) {
 			config.adminExists = false;
 		} else {
