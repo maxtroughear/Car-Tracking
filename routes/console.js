@@ -71,7 +71,10 @@ router.post('/firstaccount', (req, res, next) => {
 					//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
 					res.json({ status: 'FAILED', message: 'Unable to create account error' });
 				} else {
-					if (user != null && user.username === req.body.username) {
+					
+					console.log(user);
+					
+					if (user != null) {
 						req.flash('error', 'Unable to create account');
 						//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
 						res.json({ status: 'FAILED', message: 'Unable to create account user exists' });
