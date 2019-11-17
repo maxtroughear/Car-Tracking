@@ -10,7 +10,7 @@ config.session = {
     secret: process.env.SECRET
 };
 
-config.adminExists = false;
+config.adminExists = true;
 
 config.maxLocationCount = process.env.MAXLOCATION;
 
