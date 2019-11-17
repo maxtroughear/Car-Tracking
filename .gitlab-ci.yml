@@ -222,7 +222,7 @@ production:
   image: kroniak/ssh-client
   environment:
     name: production
-    url: http://$CI_PROJECT_PATH_SLUG.$BASE_DOMAIN
+    url: http://cartracking.$BASE_DOMAIN
   before_script:
     - |
       if [[ -z "$CI_COMMIT_TAG" ]]; then

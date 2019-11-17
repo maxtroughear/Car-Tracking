@@ -54,6 +54,8 @@ router.post('/firstaccount', (req, res, next) => {
 	if (config.adminExists) {
 		res.json({ status: 'INVALID REQUEST' });
 	} else {
+		console.log(req.body.username, req.body.name, req.body.password, req.body.confirmpassword);
+		
 		if (req.body.username == null || req.body.name == null || req.body.password == null || req.body.confirmpassword == null) {
 			req.flash('error', 'Unable to create account');
 			//res.redirect('/?register=true');
