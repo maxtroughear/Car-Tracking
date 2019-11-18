@@ -11,32 +11,83 @@ const adminRouter = require('./console.admin');
 
 const isAuthenticated = require('./auth/middleware').isAuthenticated;
 
+const config = require('../config');
+
 const User = require('../models/user').model;
 const Car = require('../models/car').model;
 
-/* GET home page. */
-// router.get('/', (req, res, next) => {
-// 	if (!req.isAuthenticated()) {
-// 		res.redirect('console/login');
-// 	} else {
-// 		Car.find({ user: req.user._id }, (err, cars) => {
-// 			if (err) {
-// 				res.render('console');
-// 			} else {
-// 				res.render('console', { carlist: cars });
-// 			}
-// 		});
-// 	}
-// });
-
 router.use('/admin', adminRouter);
 
-router.get('/login', (req, res, next) => {
-	res.render('login', { title: 'Login' });
+router.get('/login', (req, res) => {
+	if (config.adminExists)
+		res.render('login', { title: 'Login' });
+	else {
+		res.redirect('/console/firstaccount');
+	}
+});
+
+router.get('/firstaccount', (req, res) => {
+	if (config.adminExists)
+		res.redirect('/console/login');
+	else {
+		res.render('register', { title: 'First Account' });
+	}
+});
+
+router.post('/firstaccount', (req, res, next) => {
+	if (config.adminExists) {
+		res.json({ status: 'INVALID REQUEST' });
+	} else {
+		console.log(req.body.username, req.body.name, req.body.password, req.body.confirmpassword);
+		
+		if (req.body.username == null || req.body.name == null || req.body.password == null || req.body.confirmpassword == null) {
+			req.flash('error', 'Unable to create account');
+			//res.redirect('/?register=true');
+			res.json({ status: 'FAILED', message: 'Missing info' });
+		} else if (req.body.password !== req.body.confirmpassword) {
+			req.flash('error', 'Unable to create account. Passwords don\'t match');
+			//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
+			res.json({ status: 'FAILED', message: 'Passwords don\'t match' });
+		} else {
+			User.findOne({ username: req.body.username }).then((user, err) => {
+				if (err) {
+					req.flash('error', 'Unable to create account');
+					//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
+					res.json({ status: 'FAILED', message: 'Unable to create account error' });
+				} else {
+					if (user != null) {
+						req.flash('error', 'Unable to create account');
+						//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
+						res.json({ status: 'FAILED', message: 'Unable to create account user exists' });
+					} else {
+						bcrypt.hash(req.body.password, 10, (err, hash) => {
+							// generate apikey
+							
+							const uuidAPI = uuidAPIKey.create();
+							
+							const newUser = new User({
+								username: req.body.username,
+								name: req.body.name,
+								hash: hash,
+								uuid: uuidAPI.uuid,
+								apikey: uuidAPI.apiKey,
+								admin: true
+							});
+							
+							newUser.save().then(() => {
+								config.adminExists = true;
+								return res.redirect('/console');
+							})
+						});
+					}
+				}
+			});
+		}
+	}
 });
 
 router.post('/login', (req, res, next) => {
-	passport.authenticate('local', (err, user, info) => {
+	passport.authenticate('local', {}, (err, user, info) => {
 		if (err) {
 			req.flash('error', 'Unexpected error occurred');
 			return res.redirect('/');

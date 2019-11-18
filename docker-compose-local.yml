@@ -1,0 +1,17 @@
+version: '3'
+services:
+  cartracking:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MAXLOCATION=30
+      - SECRET=NOTASECRET
+
+  mongo:
+    image: mongo
+    volumes:
+    - cartracking-data:/data/db
+
+volumes:
+  cartracking-data:

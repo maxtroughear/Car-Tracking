@@ -10,6 +10,8 @@ config.session = {
     secret: process.env.SECRET
 };
 
+config.adminExists = true;
+
 config.maxLocationCount = process.env.MAXLOCATION;
 
 module.exports = config;
