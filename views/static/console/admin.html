@@ -40,13 +40,18 @@
             Users
         </a>
     </li>
+    <li>
+        <a data-toggle="pill" href="#cars" class="list-group-item">
+            Cars
+        </a>
+    </li>
 </ul></div>
                 <div class="col">
                     <div class="tab-content">
                         <div id="dashboard" class="tab-pane fade active show">
                             <h1>Dashboard</h1>
                         </div>
-                        <div id="users" class="tab-pane fade active show">
+                        <div id="users" class="tab-pane fade">
                             <h1>Users</h1>
                             <div class="row" style="padding-bottom: 10px;">
                                 <div class="col"><button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createUserModal">Create User</button></div>
@@ -74,6 +79,37 @@
             <div class="col-sm-3">
                 <button type="button" class="btn btn-warning float-right" data-toggle="modal" data-target="#editUserModal" data-id="{{this._id}}" data-username="{{this.username}}" data-name="{{this.name}}" data-apikey="{{this.apikey}}" data-uuid="{{this.uuid}}">
                     Edit
+                </button>
+            </div>
+        </div>
+    </li>
+    {{/each}}
+</ul></div>
+                            </div>
+                        </div>
+                        <div id="cars" class="tab-pane fade">
+                            <h1>Cars</h1>
+                            <div class="row" style="padding-bottom: 10px;">
+                                <div class="col"><button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createCarModal">Create Car</button></div>
+                            </div>
+                            <div class="row">
+                                <div class="col"><ul class="list-group nav">
+    {{#each cars}}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-sm-4" style="align-items: center; display: flex;">
+                <h6 class="" style="margin: 0">
+                    {{this.name}}
+                </h6>
+            </div>
+            <div class="col-sm-4" style="align-items: center; display: flex;">
+                <h6 class="" style="margin: 0">
+                    {{this.user.name}}
+                </h6>
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#editCarModal" data-id="{{this._id}}" data-username="{{this.user.name}}" data-name="{{this.name}}" data-apikey="{{this.user.apikey}}">
+                    Details
                 </button>
             </div>
         </div>
@@ -115,17 +151,63 @@
                     <h4 class="modal-title">Edit User</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                 <div class="modal-body">
                     <form method="post" action="/console/admin/createaccount">
-                        <div class="form-group"><label>Email Address</label><input class="form-control" type="email" id="username" name="username"></div>
-                        <div class="form-group"><label>Name</label><input class="form-control" type="text" id="password" name="name"></div>
-                        <div class="form-group"><label>Password</label><input class="form-control" type="password" id="password" name="password"></div>
-                        <div class="form-group"><label>Confirm Password</label><input class="form-control" type="password" id="confirmpassword" name="confirmpassword"></div>
-                        <div class="form-group"><label>Authorisation Level</label><select class="form-control" id="authlevel" name="authlevel"><option value="0" selected="">User</option><option value="1">Admin</option></select></div>
+                        <div class="form-group"><label>Email Address</label><input class="form-control" type="email" id="account-username" name="username"></div>
+                        <div class="form-group"><label>Name</label><input class="form-control" type="text" id="account-name" name="name"></div>
+                        <div class="form-group"><label>Password</label><input class="form-control" type="password" name="password"></div>
+                        <div class="form-group"><label>Confirm Password</label><input class="form-control" type="password" name="confirmpassword"></div>
+                        <div class="form-group"><label>Authorisation Level</label><select class="form-control" name="authlevel"><option value="0" selected="">User</option><option value="1">Admin</option></select></div>
                         <div class="btn-toolbar float-left">
-                            <div class="btn-group" role="group"><a class="btn btn-danger" role="button" id="deleteButton" style="color: rgb(255,255,255);" href="">Delete</a></div>
+                            <div class="btn-group" role="group"><a class="btn btn-danger" role="button" id="account-deleteButton" style="color: rgb(255,255,255);" href="">Delete</a></div>
                         </div>
                         <div class="btn-toolbar float-right">
                             <div class="btn-group" role="group"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
                             <div class="btn-group" role="group"><button class="btn btn-primary" type="submit" disabled="">Update</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="createCarModal">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create Car</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body">
+                    <form method="post" action="/console/admin/createcar">
+                        <div class="form-group"><label>Name</label><input class="form-control" type="text" name="name"></div>
+                        <div class="form-group"><label>User</label><select class="form-control" name="user">
+     {{#each users}}
+    <option value="{{this._id}}">
+            {{this.username}}
+    </option>
+    {{/each}}
+</select></div>
+                        <div class="btn-toolbar float-right">
+                            <div class="btn-group" role="group"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
+                            <div class="btn-group" role="group"><button class="btn btn-primary" type="submit">Create</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="editCarModal">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Car Details</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body">
+                    <form method="post" action="/console/admin/createaccount">
+                        <div class="form-group"><label>Name</label><input class="form-control" type="text" id="car-name" name="name" readonly=""></div>
+                        <div class="form-group"><label>User</label><input class="form-control disabled" type="text" id="car-username" name="name" readonly=""></div>
+                        <div class="form-group"><label>Car ID</label><input class="form-control disabled" type="text" id="car-id" name="name" readonly=""></div>
+                        <div class="form-group"><label>API Key</label><input class="form-control disabled" type="text" id="car-apikey" name="name" readonly=""></div>
+                        <div class="btn-toolbar float-left">
+                            <div class="btn-group" role="group"><a class="btn btn-danger" role="button" id="car-deleteButton" style="color: rgb(255,255,255);" href="">Delete</a></div>
+                        </div>
+                        <div class="btn-toolbar float-right">
+                            <div class="btn-group" role="group"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
                         </div>
                     </form>
                 </div>

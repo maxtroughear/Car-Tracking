@@ -13,28 +13,12 @@ const isAuthenticated = require('./auth/middleware').isAuthenticated;
 
 const config = require('../config');
 
-
 const User = require('../models/user').model;
 const Car = require('../models/car').model;
 
-/* GET home page. */
-// router.get('/', (req, res, next) => {
-// 	if (!req.isAuthenticated()) {
-// 		res.redirect('console/login');
-// 	} else {
-// 		Car.find({ user: req.user._id }, (err, cars) => {
-// 			if (err) {
-// 				res.render('console');
-// 			} else {
-// 				res.render('console', { carlist: cars });
-// 			}
-// 		});
-// 	}
-// });
-
 router.use('/admin', adminRouter);
 
-router.get('/login', (req, res, next) => {
+router.get('/login', (req, res) => {
 	if (config.adminExists)
 		res.render('login', { title: 'Login' });
 	else {
@@ -42,7 +26,7 @@ router.get('/login', (req, res, next) => {
 	}
 });
 
-router.get('/firstaccount', (req, res, next) => {
+router.get('/firstaccount', (req, res) => {
 	if (config.adminExists)
 		res.redirect('/console/login');
 	else {
@@ -71,9 +55,6 @@ router.post('/firstaccount', (req, res, next) => {
 					//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
 					res.json({ status: 'FAILED', message: 'Unable to create account error' });
 				} else {
-					
-					console.log(user);
-					
 					if (user != null) {
 						req.flash('error', 'Unable to create account');
 						//res.redirect('/?register=true&username=' + encodeURIComponent(req.body.username));
@@ -94,6 +75,7 @@ router.post('/firstaccount', (req, res, next) => {
 							});
 							
 							newUser.save().then(() => {
+								config.adminExists = true;
 								return res.redirect('/console');
 							})
 						});
@@ -105,7 +87,7 @@ router.post('/firstaccount', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-	passport.authenticate('local', (err, user, info) => {
+	passport.authenticate('local', {}, (err, user, info) => {
 		if (err) {
 			req.flash('error', 'Unexpected error occurred');
 			return res.redirect('/');

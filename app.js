@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const sassMiddleware = require('node-sass-middleware');
 const session = require('express-session');
-const hbs = require('express-handlebars');
+const exphbs = require('express-handlebars');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -18,20 +18,19 @@ const apiRouter = require('./routes/api');
 
 const User = require('./models/user').model;
 
-
 const app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
 
-app.engine('hbs', hbs({
-	extname: 'hbs',
-	defaultLayout: 'layout',
-	layoutsDir: path.join(__dirname, 'views/layouts')
-}));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.engine('.hbs', exphbs({extname: '.hbs'}));
+app.set('view engine', '.hbs');
+
+//app.set('views', path.join(__dirname, 'views'));
+// app.engine('handlebars', hbs({
+// 	extname: '.hbs',
+// 	defaultLayout: 'layout',
+// 	layoutsDir: path.join(__dirname, 'views/layouts')
+// }));
 
 app.set('trust proxy', 1);
 
@@ -46,8 +45,8 @@ app.use(session({
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize({}));
+app.use(passport.session({}));
 app.use(sassMiddleware({
 	src: path.join(__dirname, 'public'),
 	dest: path.join(__dirname, 'public'),
@@ -66,7 +65,7 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -80,20 +79,18 @@ mongoose.connect(config.mongodb.uri, { useNewUrlParser: true }).then(() => {
 	console.log('Connected to mongodb');
 	
 	// check if main admin exists
-	User.findOne({ admin: true }).then((user, err) => {
+	User.findOne({ admin: true }).then((user) => {
 		if (user == null) {
 			config.adminExists = false;
 		}
 		console.log('Admin exists: ' + config.adminExists);
 	});
 	
-	// create admin if account does not exist
-	
 }).catch(err => {
 	console.log('Unable to connect to mongodb');
 	console.error(err.name);
 	
-	process.exit(1);
+	//process.exit(1);
 });
 
 module.exports = app;

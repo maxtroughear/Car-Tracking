@@ -8,6 +8,7 @@ const uuidAPIKey = require('uuid-apikey');
 //const authenticationMiddleware = require('./middleware');
 
 const User = require('../../models/user').model;
+const Car = require('../../models/car').model;
 
 passport.use(new LocalStrategy({
 		usernameField: 'username',
@@ -42,6 +43,21 @@ passport.use(new LocalAPIStrategy((key, done) => {
 	}
 	const uuid = uuidAPIKey.toUUID(key);
 	//console.log(uuid);
+	
+	// Car.findOne({ 'uuid': uuid}).then((car, err) => {
+	// 	if (err) {
+	// 		return done(err);
+	// 	} else {
+	// 		if (car == null) {
+	// 			return done(null, false);
+	// 		}
+	// 		if (car.uuid !== uuid) {
+	// 			return done(null, false);
+	// 		}
+	// 		return done(null, car);
+	// 	}
+	// });
+	
 	User.findOne({ 'uuid': uuid }).then((user, err) => {
 		if (err) {
 			return done(err);

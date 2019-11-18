@@ -11,9 +11,19 @@ const User = require('../models/user').model;
 const Location = require('../models/location').model;
 const Car = require('../models/car').model;
 
-router.get('*', function (req, res, next) {
+router.get('/', function (req, res, next) {
 	res.redirect('/');
 });
+
+// router.get('/requestkey', (req, res) => {
+// 	// check to see if an apikey has been assigned to this uuid
+// 	// if yes, send it to the device
+// 	// else send nothing
+//
+// 	Device
+//
+// 	return db.getAssignedAPIKey(req.query.uuid);
+// });
 
 router.use((req, res, next) => {
 	// check apikey
@@ -41,7 +51,10 @@ router.use((req, res, next) => {
 	})(req, res, next);
 });
 
-router.post('/submitlocation/:carID', isAuthenticated(), (req, res, next) => {
+router.post('/submitlocation/:carID', (req, res, next) => {
+	if (!req.isAuthenticated()) {
+		res.end('NO AUTH');
+	}
 	//console.log(req.params);
 	//console.log(req.user);
 	
