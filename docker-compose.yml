@@ -8,6 +8,7 @@ services:
       - LETSENCRYPT_HOST=__VIRTUAL_HOST_SSL__
       - MAXLOCATION=__MAXLOCATION__
       - SECRET=__SECRET__
+      - SSL_POLICY=Mozilla-Old
 
   mongo:
     image: mongo
