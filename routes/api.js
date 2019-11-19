@@ -27,8 +27,8 @@ router.get('/', function (req, res, next) {
 
 router.use((req, res, next) => {
 	// check apikey
-	if (req.query.apikey == null) {
-		return res.json({ status: 'NO KEY' });
+	if (req.body.apikey == null) {
+		return res.end('NO KEY');
 	}
 	next();
 });
@@ -73,8 +73,8 @@ router.post('/submitlocation/:carID', (req, res, next) => {
 				
 				// update car
 				car.locations.push(new Location({
-					lat: req.query.lat,
-					lon: req.query.lon,
+					lat: req.body.lat,
+					lon: req.body.lon,
 					time: new Date()
 				}));
 				//car.user = car.user._id;
