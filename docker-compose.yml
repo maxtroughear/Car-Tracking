@@ -8,7 +8,8 @@ services:
       - LETSENCRYPT_HOST=__VIRTUAL_HOST_SSL__
       - MAXLOCATION=__MAXLOCATION__
       - SECRET=__SECRET__
-      - SSL_POLICY=Mozilla-Old
+      - SSL_POLICY=AWS-2016-08
+      - DHPARAM_BITS=1024
 
   mongo:
     image: mongo
