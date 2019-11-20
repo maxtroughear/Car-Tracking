@@ -8,7 +8,6 @@ services:
       - LETSENCRYPT_HOST=__VIRTUAL_HOST_SSL__
       - MAXLOCATION=__MAXLOCATION__
       - SECRET=__SECRET__
-      - API=false
 
   cartracking-api:
     image: __CI_APPLICATION_REPOSITORY__:__VERSION__
