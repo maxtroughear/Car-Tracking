@@ -55,9 +55,13 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/console/', consoleRouter);
-app.use('/api/', apiRouter);
+if (!process.env.API) {
+	app.use('/', indexRouter);
+	app.use('/console/', consoleRouter);
+}
+else {
+	app.use('/api/', apiRouter);
+}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

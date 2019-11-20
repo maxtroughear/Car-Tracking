@@ -8,10 +8,16 @@ services:
       - LETSENCRYPT_HOST=__VIRTUAL_HOST_SSL__
       - MAXLOCATION=__MAXLOCATION__
       - SECRET=__SECRET__
-      - SSL_POLICY=Mozilla-Old
-      - DHPARAM_BITS=1024
-      - HSTS=max-age=31536000
-      - HTTPS_METHOD=noredirect
+      - API=false
+
+  cartracking-api:
+    image: __CI_APPLICATION_REPOSITORY__:__VERSION__
+    environment:
+      - VIRTUAL_HOST=api.__VIRTUAL_HOST__
+      - VIRTUAL_PORT=__VIRTUAL_PORT__
+      - MAXLOCATION=__MAXLOCATION__
+      - SECRET=__SECRET__
+      - API=true
 
   mongo:
     image: mongo
