@@ -8,6 +8,15 @@ services:
       - MAXLOCATION=30
       - SECRET=NOTASECRET
 
+  cartracking-api:
+    build: .
+    ports:
+      - "3001:3000"
+    environment:
+      - MAXLOCATION=30
+      - SECRET=NOTASECRET
+      - API=true
+
   mongo:
     image: mongo
     volumes:

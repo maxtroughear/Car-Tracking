@@ -16,6 +16,7 @@ services:
       - VIRTUAL_PORT=__VIRTUAL_PORT__
       - MAXLOCATION=__MAXLOCATION__
       - SECRET=__SECRET__
+      - HTTPS_METHOD=noredirect
       - API=true
 
   mongo:
